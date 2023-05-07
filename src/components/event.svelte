@@ -65,6 +65,7 @@
 
   function removeItem(){
     $store = $store.filter((item) => item.id !== objID)
+    console.log($store)
   }	
 
   function resizeWindow(e){

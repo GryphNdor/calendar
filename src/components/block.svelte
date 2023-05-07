@@ -11,8 +11,6 @@
   let colorOptions = ["bg-emerald-300", "bg-sky-300", "bg-red-300",
   "bg-indigo-300", "bg-pink-300", "bg-yellow-300"];
 
-  id.set(0);
-
   function addEvent(){
     let len = $store.length;
     $store[len] = {id: $id, blockID,left:bounding.left,top:bounding.top, name:title, color: colorOptions[Math.floor(Math.random() * 6)]};
