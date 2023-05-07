@@ -1,4 +1,7 @@
 <script lang="javascript">
+  import { store } from '../store.ts'
+  import { blur } from 'svelte/transition';
+
 	export let left = 0;
 	export let top = 200;
 
@@ -20,14 +23,17 @@
     if(cursorChange){
       resize = true;
     }
+    else if(e.shiftKey){
+      removeItem();
+    }
     else{
       moving = true;
     }
-    
 	}
 	
 	function onMouseMove(e) {
-    if(e.clientY > bottom - 15 && e.clientY <= bottom + 10){
+    if(e.pageY > bottom - 15 && e.pageY <= bottom + 10 && e.clientX >= left &&
+    e.clientX <= left + (width*16)){
       cursorChange = true;
     }
     else{
@@ -41,7 +47,7 @@
         height += e.movementY/16
       }
     }
-    else if (moving) {
+    else if (moving && !e.shiftKey) {
       left += e.movementX;
       top += e.movementY;        
 		}
@@ -54,29 +60,33 @@
 	}
 
 
-  export let color="bg-emerald-500"
-	
-// 	$: console.log(moving);
+  export let objID = {};
+  export let color;
+
+  function removeItem(){
+    $store = $store.filter((item) => item.id !== objID)
+  }	
+
+  function resizeWindow(e){
+    console.log(e);
+  }
 </script>
 
-{#if cursorChange === false}
 <section on:mousedown={onMouseDown} style="left: {left}px; top: {top}px;
 width:{width}%; height: {height}rem;"
-  class="cursor-move select-none flex absolute
-    justify-center items-center resize-y {color}">
+  class="select-none flex absolute
+    justify-center items-center resize-y {color} rounded-r-lg"
+  class:cursor-move={!cursorChange}
+  class:opacity-80={cursorChange}
+  class:cursor-row-resize={cursorChange}
+  class:drop-shadow-lg={moving}
+  
+  transition:blur
+>
 	<slot></slot>
 </section>
-{:else}
-<section on:mousedown={onMouseDown} style="left: {left}px; top: {top}px;
-width:{width}%; height: {height}rem"
-  class="cursor-row-resize select-none flex absolute
-    justify-center items-center resize-y {color}"
-    class:color={color}>
-	<slot></slot>
-</section>
-{/if}
 
-<svelte:window on:mouseup={onMouseUp} on:mousemove={onMouseMove} />
+<svelte:window on:mouseup={onMouseUp} on:mousemove={onMouseMove}
+  on:resize={resizeWindow} />
 
-<style lang="postcss">
-</style>
+<style lang="postcss"></style>

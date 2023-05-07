@@ -3,27 +3,23 @@
   import Headers from '../components/headers.svelte'
   import Event from '../components/event.svelte'
 
-  import { writable } from 'svelte/store';
-
-  let store = writable({});
+  import { store, id } from '../store.ts'
 
   let currX, currY;
-
-  function onMouseDown(e){
-    currX = event.clientX;
-    currY = event.clientY;
-  }
-
   $store = []
 
   let title = ""
   let colorOptions = ["bg-emerald-300", "bg-sky-300", "bg-red-300",
   "bg-indigo-300", "bg-pink-300", "bg-yellow-300"];
+
+  id.set(0);
+
   function addEvent(){
     let len = $store.length;
     
-    $store[len] = {name:title, color: colorOptions[Math.floor(Math.random() * 6)]};
+    $store[len] = {id: $id, name:title, color: colorOptions[Math.floor(Math.random() * 6)]};
     title = "";
+    $id++;
   }
 
   function clearEvents(){
@@ -36,141 +32,34 @@
   <a href="/">settings</a>
 </div>
 
-<div class="flex flex-col justify-start items-center">
-  <input class="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300
-    placeholder-slate-400 focus:outline-none focus:border-sky-500
-    focus:ring-sky-500 block w-48 rounded-md sm:text-sm focus:ring-1"
-    bind:value={title}/>
-  <button class="hover:text-emerald-400" on:click={addEvent}>
-    add new event
-  </button>
+<div class="flex flex-col mr-2 justify-start items-end">
   <button class="text-red-500" on:click={clearEvents}>
     clear events
   </button>
 </div>
 
+
 <Headers/>
+<div class="flex mb-2 h-screen box-border">
+  <div class="grid grid-cols-1 ml-2 absolute z-40">
+    {#each Array(16) as _, i (i)}
+      <h1 class="text-sm h-20 pl-1">{7+i}</h1>
+    {/each}
+  </div>
+  <div class="h-fit w-full ml-2 mr-2 pb-2 grid grid-cols-7">
 
-<div class="ml-2 mr-2 h-screen box-border">
-  <div class="h-fit mb-2 grid grid-cols-7">
+    {#each $store as item}
+      <Event left={item.left} top={item.top} color={item.color} objID={item.id}>
+          <h4 class="text-sm">{item.name}</h4>
+        </Event>
+    {/each}
 
-  {#each $store as item}
-      <Event left={currX} top={currY} color={item.color}>{item.name}</Event>
-  {/each}
-    <Block row={0} col={0}/>
-    <Block row={0} col={1}/>
-    <Block row={0} col={2}/>
-    <Block row={0} col={3}/>
-    <Block row={0} col={4}/>
-    <Block row={0} col={5}/>
-    <Block row={0} col={6}/>
+    {#each Array(16) as _, i (i)}
+      {#each Array(7) as _, j (j)}
+        <Block row={i} col={j}/>
+      {/each}
+    {/each}
 
-    <Block row={1} col={0}/>
-    <Block row={1} col={1}/>
-    <Block row={1} col={2}/>
-    <Block row={1} col={3}/>
-    <Block row={1} col={4}/>
-    <Block row={1} col={5}/>
-    <Block row={1} col={6}/>
-
-    <Block row={1} col={0}/>
-    <Block row={1} col={1}/>
-    <Block row={1} col={2}/>
-    <Block row={1} col={3}/>
-    <Block row={1} col={4}/>
-    <Block row={1} col={5}/>
-    <Block row={1} col={6}/>
-
-    <Block row={1} col={0}/>
-    <Block row={1} col={1}/>
-    <Block row={1} col={2}/>
-    <Block row={1} col={3}/>
-    <Block row={1} col={4}/>
-    <Block row={1} col={5}/>
-    <Block row={1} col={6}/>
-
-    <Block row={1} col={0}/>
-    <Block row={1} col={1}/>
-    <Block row={1} col={2}/>
-    <Block row={1} col={3}/>
-    <Block row={1} col={4}/>
-    <Block row={1} col={5}/>
-    <Block row={1} col={6}/>
-
-    <Block row={1} col={0}/>
-    <Block row={1} col={1}/>
-    <Block row={1} col={2}/>
-    <Block row={1} col={3}/>
-    <Block row={1} col={4}/>
-    <Block row={1} col={5}/>
-    <Block row={1} col={6}/>
-
-    <Block row={1} col={0}/>
-    <Block row={1} col={1}/>
-    <Block row={1} col={2}/>
-    <Block row={1} col={3}/>
-    <Block row={1} col={4}/>
-    <Block row={1} col={5}/>
-    <Block row={1} col={6}/>
-
-    <Block row={1} col={0}/>
-    <Block row={1} col={1}/>
-    <Block row={1} col={2}/>
-    <Block row={1} col={3}/>
-    <Block row={1} col={4}/>
-    <Block row={1} col={5}/>
-    <Block row={1} col={6}/>
-
-    <Block row={1} col={0}/>
-    <Block row={1} col={1}/>
-    <Block row={1} col={2}/>
-    <Block row={1} col={3}/>
-    <Block row={1} col={4}/>
-    <Block row={1} col={5}/>
-    <Block row={1} col={6}/>
-
-    <Block row={1} col={0}/>
-    <Block row={1} col={1}/>
-    <Block row={1} col={2}/>
-    <Block row={1} col={3}/>
-    <Block row={1} col={4}/>
-    <Block row={1} col={5}/>
-    <Block row={1} col={6}/>
-    <Block row={1} col={0}/>
-    <Block row={1} col={1}/>
-    <Block row={1} col={2}/>
-    <Block row={1} col={3}/>
-    <Block row={1} col={4}/>
-    <Block row={1} col={5}/>
-    <Block row={1} col={6}/>
-    <Block row={1} col={0}/>
-    <Block row={1} col={1}/>
-    <Block row={1} col={2}/>
-    <Block row={1} col={3}/>
-    <Block row={1} col={4}/>
-    <Block row={1} col={5}/>
-    <Block row={1} col={6}/>
-    <Block row={1} col={0}/>
-    <Block row={1} col={1}/>
-    <Block row={1} col={2}/>
-    <Block row={1} col={3}/>
-    <Block row={1} col={4}/>
-    <Block row={1} col={5}/>
-    <Block row={1} col={6}/>
-    <Block row={1} col={0}/>
-    <Block row={1} col={1}/>
-    <Block row={1} col={2}/>
-    <Block row={1} col={3}/>
-    <Block row={1} col={4}/>
-    <Block row={1} col={5}/>
-    <Block row={1} col={6}/>
-    <Block row={1} col={0}/>
-    <Block row={1} col={1}/>
-    <Block row={1} col={2}/>
-    <Block row={1} col={3}/>
-    <Block row={1} col={4}/>
-    <Block row={1} col={5}/>
-    <Block row={1} col={6}/>
   </div>
 </div>
 
